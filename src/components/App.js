@@ -1,4 +1,5 @@
 import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 import '../index.css';
 import Header from "./Header.js"
 import Main from "./Main.js"
@@ -11,6 +12,7 @@ import ImagePopup from './ImagePopup';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import api  from '../utils/api';
 import CardsContext from '../contexts/CardsContext';
+import Login from './Login';
 
 
 function App() {
@@ -141,39 +143,46 @@ function App() {
   }
 
   return (
-    <div className="body">
-      <CurrentUserContext.Provider value={currentUser}>
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}>
-        </EditAvatarPopup>
+    <Switch>
+      <Route path="/signin">
+        <Login />
+      </Route>
+      <Route path ="/">
+        <div className="body">
+          <CurrentUserContext.Provider value={currentUser}>
+            <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}>
+            </EditAvatarPopup>
 
-        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}>
-        </EditProfilePopup>
+            <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}>
+            </EditProfilePopup>
 
-        <AddPostPopup isOpen={isAddPostPopupOpen} onClose={closeAllPopups} onUpdateUser={handleAddPost}>
-        </AddPostPopup>
+            <AddPostPopup isOpen={isAddPostPopupOpen} onClose={closeAllPopups} onUpdateUser={handleAddPost}>
+            </AddPostPopup>
 
-        <PopupWithForm id="delete-post" title="Are you sure?" submitBtnTitle="Yes" isOpen={isDeletePostPopupOpen} onClose={closeDeletePopup} onSubmit={handleDeleteCardSubmit} >
-        </PopupWithForm >
+            <PopupWithForm id="delete-post" title="Are you sure?" submitBtnTitle="Yes" isOpen={isDeletePostPopupOpen} onClose={closeDeletePopup} onSubmit={handleDeleteCardSubmit} >
+            </PopupWithForm >
 
-        <ImagePopup isOpen={isImagePopupOpen} selectedCard={selectedCard} onClose={closeAllPopups}/>
+            <ImagePopup isOpen={isImagePopupOpen} selectedCard={selectedCard} onClose={closeAllPopups}/>
 
-        <div className="page">
+            <div className="page">
 
-          <Header/>
-          <CardsContext.Provider value={cards}>
-            <Main
-            handleEditAvatarClick={handleEditAvatarClick}
-            handleEditProfileClick={handleEditProfileClick}
-            handleAddCardClick={handleAddCardClick}
-            handleDeleteBtnClick={handleDeleteBtnClick}
-            onCardClick={handleCardClick}
-            handleCardLike={handleCardLike}
-            />
-          </CardsContext.Provider>
-          <Footer/>
+              <Header userEmail="example@gmail.com" isloggedIn={true}/>
+              <CardsContext.Provider value={cards}>
+                <Main
+                handleEditAvatarClick={handleEditAvatarClick}
+                handleEditProfileClick={handleEditProfileClick}
+                handleAddCardClick={handleAddCardClick}
+                handleDeleteBtnClick={handleDeleteBtnClick}
+                onCardClick={handleCardClick}
+                handleCardLike={handleCardLike}
+                />
+              </CardsContext.Provider>
+              <Footer/>
+            </div>
+          </CurrentUserContext.Provider>
         </div>
-      </CurrentUserContext.Provider>
-    </div>
+      </Route>
+    </Switch>
   );
 }
 
