@@ -1,0 +1,25 @@
+.header {
+  max-width: 100%;
+  padding-top: 45px;
+  display: flex;
+  align-items: flex-start;
+  border-bottom: 1px solid rgba(84, 84, 84, .7);
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  margin: 0 auto;
+}
+
+
+@media only screen and (max-width: 767px){
+  .header {
+    padding-top: 28px;
+    width: 320px;
+  }
+}
+
+@media only screen and (max-width: 319px){
+  .header {
+    width: 100%;
+  }
+}
+

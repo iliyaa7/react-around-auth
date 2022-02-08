@@ -1,0 +1,11 @@
+.post__heading {
+  font-family: Inter, sans-serif, serif;
+  font-style: normal;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: calc(29 / 24);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  margin: 25px 0 31px;
+}

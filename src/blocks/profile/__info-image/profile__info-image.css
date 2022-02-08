@@ -1,0 +1,12 @@
+.profile__info-image {
+  max-width: 10px;
+  max-height: 10px;
+  margin: auto;
+}
+
+@media only screen and (max-width: 767px){
+  .profile__info-image {
+    max-height: 7.5px;
+    max-width: 7.5px;
+  }
+}

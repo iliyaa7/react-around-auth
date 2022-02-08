@@ -1,0 +1,18 @@
+.profile__image-button {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+  max-width: 26px;
+  max-height: 26px;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  cursor: pointer;
+  display: none;
+}
+
+
+
+.profile__image-button:hover {
+  display:flex;
+}

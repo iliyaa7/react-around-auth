@@ -1,0 +1,19 @@
+.post__button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  max-width: 21px;
+  min-height: 19px;
+  transition: opacity .2s linear;
+  background-image: url(../../../images/like-button.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 0 0 3px;
+  padding-left: 15px;
+}
+
+
+
+.post__button:hover {
+  opacity: .5;
+}

@@ -1,0 +1,21 @@
+.post {
+  max-width: 282px;
+  max-height: 361px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #FFFFFF;
+  box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15);
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border-radius: 11px 11px 11px 11px;
+  position: relative;
+}
+
+@media only screen and (max-width: 767px){
+  .post {
+    width: 100%;
+  }
+}
+
+

@@ -1,0 +1,35 @@
+.popup__form-input {
+  width: 100%;
+  margin-top: 54px;
+  font-family: Inter, serif, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: calc(17 / 14);
+  border-top-style: hidden;
+  border-right-style: hidden;
+  border-left-style: hidden;
+  border-bottom: 1px solid rgb(0,0,0,.2);
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+
+.popup__form-input:last-of-type {
+  margin-top: 30px;
+}
+
+@media only screen and (max-width: 767px){
+  .popup__form-input {
+    margin-top: 76px;
+  }
+
+  .popup__form-input:last-of-type {
+    margin-top: 39px;
+  }
+}
+
+@media only screen and (max-width: 319px){
+  .popup__form-input {
+    max-width: 100%;
+  }
+}

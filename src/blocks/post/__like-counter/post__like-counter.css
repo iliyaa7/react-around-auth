@@ -1,0 +1,13 @@
+.post__like-counter {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: calc(16 / 13);
+  text-align: center;
+  color: #000000;
+  margin: 3px 0 0;
+  width: 9px;
+  height: 13px;
+}
+
