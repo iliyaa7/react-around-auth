@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "./Header";
 import {Link} from "react-router-dom";
+import InfoTooltip from "./InfoTooltip";
 
 function Register(props) {
   const [email, setEmail] = React.useState('');
@@ -14,11 +15,10 @@ function Register(props) {
     setPassword(e.target.value)
   }
 
-  // dont forget to change the props.
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.onUpdateUser({
+    props.handleRegister({
       email,
       password,
     });
@@ -26,6 +26,7 @@ function Register(props) {
   return (
     <>
     <div className="body">
+      <InfoTooltip isOpen={props.isOpen} onClose={props.onClose} isSuccessfull={props.isSuccessfull}></InfoTooltip>
       <div className="page">
         <Header buttonTitle="Log in" buttonPath="/signin"/>
         <div className="auth__form-containter">

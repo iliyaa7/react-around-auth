@@ -15,6 +15,8 @@ import CardsContext from '../contexts/CardsContext';
 import Login from './Login';
 import Register from './Register';
 import ProtectedRoute  from './ProtectedRoute';
+import auth from '../utils/auth';
+import { useHistory } from "react-router";
 
 
 function App() {
@@ -29,6 +31,8 @@ function App() {
 
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
 
+  const [isInfoToolOpen, setIsInfoToolOpen] = React.useState(false);
+
   const [selectedCard, setSelectedCard] = React.useState({});
 
   const [currentUser, setCurrentUser] = React.useState({});
@@ -37,7 +41,13 @@ function App() {
 
   const [cards, setCards] = React.useState([]);
 
-  const [isLoggedIn, setIsLoggedIn] = React.useState(true);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+  const [isResponseSuccessfull, setIsResponseSuccessfull] = React.useState(false);
+
+  const [userEmail, setUserEmail] = React.useState('')
+
+  const history = useHistory();
 
   React.useEffect(() => {
     api.getCards().then((res) => {
@@ -56,6 +66,49 @@ function App() {
       console.log(err);
     });
   }, [])
+
+  React.useEffect(() => {
+    auth.getUserInfo(localStorage.getItem('token')).then((res) => {
+      setUserEmail(res.data.email);
+      setIsLoggedIn(true);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }, [])
+
+
+
+  function handleRegister(data) {
+    auth.signup(data).then(() => {
+      setIsResponseSuccessfull(true);
+      setIsInfoToolOpen(true);
+      history.push({pathname:  "/signin",})
+    })
+    .catch((err) => {
+      console.log(`error ${err} - one of the fields was filled in incorrectly`);
+      setIsResponseSuccessfull(false);
+      setIsInfoToolOpen(true);
+    });
+  }
+
+  function handleSignin(data) {
+    auth.signin(data).then((res) => {
+      localStorage.setItem('token', res.token);
+      setUserEmail(data.email);
+      setIsLoggedIn(true);
+    })
+    .catch((err) => {
+      console.log(err);
+      if (err === 400) {
+        console.log(`error ${err} - one of the fields was filled in incorrectly`);
+      } else if (err === 401) {
+        console.log(`error ${err} - the user with the specified email not found`);
+      }
+      setIsResponseSuccessfull(false);
+      setIsInfoToolOpen(true);
+    });
+  }
 
 
   function handleEditAvatarClick() {
@@ -85,6 +138,7 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPostPopupOpen(false);
     setIsImagePopupOpen(false);
+    setIsInfoToolOpen(false);
   }
 
   function closeDeletePopup() {
@@ -147,16 +201,17 @@ function App() {
   }
 
   function handleLogOut() {
+    localStorage.removeItem('token');
     setIsLoggedIn(false);
   }
 
   return (
     <Switch>
       <Route path="/signin">
-        {isLoggedIn ? <Redirect to="/" /> : <Login />}
+        {isLoggedIn ? <Redirect to="/" /> : <Login handleSignin={handleSignin} isOpen={isInfoToolOpen} onClose={closeAllPopups} isSuccessfull={isResponseSuccessfull}/>}
       </Route>
       <Route path="/register">
-      {isLoggedIn ? <Redirect to="/" /> : <Register />}
+      {isLoggedIn ? <Redirect to="/" /> : <Register handleRegister={handleRegister} isOpen={isInfoToolOpen} onClose={closeAllPopups} isSuccessfull={isResponseSuccessfull}/>}
       </Route>
       <ProtectedRoute path="/" loggedIn={isLoggedIn}>
         <div className="body">
@@ -177,7 +232,7 @@ function App() {
 
             <div className="page">
 
-              <Header userEmail="example@gmail.com" isLoggedIn={isLoggedIn} handleLogOut={handleLogOut}/>
+              <Header userEmail={userEmail} isLoggedIn={isLoggedIn} handleLogOut={handleLogOut}/>
               <CardsContext.Provider value={cards}>
                 <Main
                 handleEditAvatarClick={handleEditAvatarClick}

@@ -178,3 +178,26 @@
 .auth__redirect-button:hover {
   opacity: 0.6
 }
+
+.popup__holder_type_tool-tip {
+  width: 430px;
+  height: 330px;
+  background-color: white;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.popup__image_type_tool-tip {
+  width: 120px;
+  height: 120px;
+}
+
+.popup__caption_type_tool-tip {
+  font-weight: 900;
+  font-size: 24px;
+  line-height: calc(29.05 / 24);
+  color: black;
+  text-align: center;
+  margin-top: 32px;
+}

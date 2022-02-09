@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "./Header";
 import {Link} from "react-router-dom";
+import InfoTooltip from "./InfoTooltip";
 
 function Login(props) {
   const [email, setEmail] = React.useState('');
@@ -14,11 +15,9 @@ function Login(props) {
     setPassword(e.target.value)
   }
 
-  // dont forget to change the props.
-
   function handleSubmit(e) {
     e.preventDefault();
-    props.onUpdateUser({
+    props.handleSignin({
       email,
       password,
     });
@@ -26,6 +25,7 @@ function Login(props) {
   return (
     <>
     <div className="body">
+      <InfoTooltip isOpen={props.isOpen} onClose={props.onClose} isSuccessfull={props.isSuccessfull}></InfoTooltip>
       <div className="page">
         <Header buttonTitle="Sign up" buttonPath="/register"/>
         <div className="auth__form-containter">
@@ -35,7 +35,6 @@ function Login(props) {
             <input className="auth__input" onChange={handlePasswordCHange} placeholder="Password" value={password|| ""} type="password" minLength="2" maxLength="40" required></input>
             <button type="submit" className="auth__submit-button">Log in</button>
             <Link to="/register"><button type="button" className="auth__redirect-button">Not a member yet? Sign up here!</button></Link>
-
           </form>
         </div>
       </div>
