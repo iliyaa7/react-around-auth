@@ -2,7 +2,7 @@ import React from "react";
 import Header from "./Header";
 import {Link} from "react-router-dom";
 
-function Login(props) {
+function Register(props) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
@@ -27,15 +27,14 @@ function Login(props) {
     <>
     <div className="body">
       <div className="page">
-        <Header buttonTitle="Sign up" buttonPath="/register"/>
+        <Header buttonTitle="Log in" buttonPath="/signin"/>
         <div className="auth__form-containter">
           <form action="#" className="auth__form" name="login-form" onSubmit={ handleSubmit }>
-            <h1 className="auth__heading">Log in</h1>
+            <h1 className="auth__heading">Sign up</h1>
             <input className="auth__input" onChange={handleEmailCHange} placeholder="Email" value={email || ""} type="email" minLength="2" maxLength="40" required></input>
             <input className="auth__input" onChange={handlePasswordCHange} placeholder="Password" value={password|| ""} type="password" minLength="2" maxLength="40" required></input>
-            <button type="submit" className="auth__submit-button">Log in</button>
-            <Link to="/register"><button type="button" className="auth__redirect-button">Not a member yet? Sign up here!</button></Link>
-
+            <button type="submit" className="auth__submit-button">Sign up</button>
+            <Link to="/signin"><button type="button" className="auth__redirect-button">Already a member? Log in here!</button></Link>
           </form>
         </div>
       </div>
@@ -45,4 +44,4 @@ function Login(props) {
   );
 }
 
-export default Login;
+export default Register;

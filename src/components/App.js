@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import '../index.css';
 import Header from "./Header.js"
 import Main from "./Main.js"
@@ -13,6 +13,8 @@ import CurrentUserContext from '../contexts/CurrentUserContext';
 import api  from '../utils/api';
 import CardsContext from '../contexts/CardsContext';
 import Login from './Login';
+import Register from './Register';
+import ProtectedRoute  from './ProtectedRoute';
 
 
 function App() {
@@ -34,6 +36,8 @@ function App() {
   const [cardToDelete, setCardToDelete] = React.useState({});
 
   const [cards, setCards] = React.useState([]);
+
+  const [isLoggedIn, setIsLoggedIn] = React.useState(true);
 
   React.useEffect(() => {
     api.getCards().then((res) => {
@@ -142,12 +146,19 @@ function App() {
     });
   }
 
+  function handleLogOut() {
+    setIsLoggedIn(false);
+  }
+
   return (
     <Switch>
       <Route path="/signin">
-        <Login />
+        {isLoggedIn ? <Redirect to="/" /> : <Login />}
       </Route>
-      <Route path ="/">
+      <Route path="/register">
+      {isLoggedIn ? <Redirect to="/" /> : <Register />}
+      </Route>
+      <ProtectedRoute path="/" loggedIn={isLoggedIn}>
         <div className="body">
           <CurrentUserContext.Provider value={currentUser}>
             <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}>
@@ -166,7 +177,7 @@ function App() {
 
             <div className="page">
 
-              <Header userEmail="example@gmail.com" isloggedIn={true}/>
+              <Header userEmail="example@gmail.com" isLoggedIn={isLoggedIn} handleLogOut={handleLogOut}/>
               <CardsContext.Provider value={cards}>
                 <Main
                 handleEditAvatarClick={handleEditAvatarClick}
@@ -181,7 +192,7 @@ function App() {
             </div>
           </CurrentUserContext.Provider>
         </div>
-      </Route>
+      </ProtectedRoute>
     </Switch>
   );
 }
