@@ -5,8 +5,8 @@ function EditAvatarPopup(props) {
   const linkRef = React.useRef(null);
 
   React.useEffect(() => {
-    if (linkRef.current) linkRef.current.value = linkRef.current.value;
-  });
+    linkRef.current.value = '';
+}, [props.isOpen]);
 
   function handleSubmit(e) {
     e.preventDefault();

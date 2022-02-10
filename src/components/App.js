@@ -17,6 +17,17 @@ import Register from './Register';
 import ProtectedRoute  from './ProtectedRoute';
 import auth from '../utils/auth';
 import { useHistory } from "react-router";
+import InfoTooltip from './InfoTooltip';
+
+// Dear Gennadiy, I've tried your code for closing the popup by escape
+// but the event never clears. Maybe it is because of that component never unmounts?
+// please help me solve that.
+
+//I've also used your solution for clearing the form inputs, but in my case i had to use props.isOpen
+// if I remeber right (from the air bnb eslint rules) you cant put only one prop as a depandancy,
+// so please tell my solution is fine.
+
+//And how do i prevent the popup from closing when clicking down on
 
 
 function App() {
@@ -82,12 +93,13 @@ function App() {
   function handleRegister(data) {
     auth.signup(data).then(() => {
       setIsResponseSuccessfull(true);
-      setIsInfoToolOpen(true);
       history.push({pathname:  "/signin",})
     })
     .catch((err) => {
       console.log(`error ${err} - one of the fields was filled in incorrectly`);
       setIsResponseSuccessfull(false);
+    })
+    .finally(() => {
       setIsInfoToolOpen(true);
     });
   }
@@ -205,13 +217,49 @@ function App() {
     setIsLoggedIn(false);
   }
 
+  React.useEffect(() => {
+    const closeByEscape = (e) => {
+      console.log(e.key)
+      if (e.key === 'Escape') {
+        closeAllPopups();
+      }
+    }
+
+    document.addEventListener('keydown', closeByEscape)
+
+    return () => document.removeEventListener('keydown', closeByEscape)
+}, [])
+
+React.useEffect(() => {
+  const closeByOverlayClick = (e) => {
+    console.log(e.target.className)
+    if (e.target.className === 'popup popup_opened') {
+      closeAllPopups();
+    }
+  }
+
+  document.addEventListener('click', closeByOverlayClick)
+
+  return () => document.removeEventListener('click', closeByOverlayClick)
+}, [])
+
   return (
     <Switch>
       <Route path="/signin">
-        {isLoggedIn ? <Redirect to="/" /> : <Login handleSignin={handleSignin} isOpen={isInfoToolOpen} onClose={closeAllPopups} isSuccessfull={isResponseSuccessfull}/>}
+        {
+          isLoggedIn ? <Redirect to="/" /> :
+          <Login handleSignin={handleSignin}>
+            <InfoTooltip isOpen={isInfoToolOpen} onClose={closeAllPopups} response={isResponseSuccessfull}></InfoTooltip>
+          </Login>
+        }
       </Route>
       <Route path="/register">
-      {isLoggedIn ? <Redirect to="/" /> : <Register handleRegister={handleRegister} isOpen={isInfoToolOpen} onClose={closeAllPopups} isSuccessfull={isResponseSuccessfull}/>}
+      {
+        isLoggedIn ? <Redirect to="/" /> :
+        <Register handleRegister={handleRegister}>
+          <InfoTooltip isOpen={isInfoToolOpen} onClose={closeAllPopups} response={isResponseSuccessfull}></InfoTooltip>
+        </Register>
+      }
       </Route>
       <ProtectedRoute path="/" loggedIn={isLoggedIn}>
         <div className="body">

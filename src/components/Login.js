@@ -1,7 +1,6 @@
 import React from "react";
 import Header from "./Header";
 import {Link} from "react-router-dom";
-import InfoTooltip from "./InfoTooltip";
 
 function Login(props) {
   const [email, setEmail] = React.useState('');
@@ -23,9 +22,8 @@ function Login(props) {
     });
   }
   return (
-    <>
     <div className="body">
-      <InfoTooltip isOpen={props.isOpen} onClose={props.onClose} isSuccessfull={props.isSuccessfull}></InfoTooltip>
+      {props.children}
       <div className="page">
         <Header buttonTitle="Sign up" buttonPath="/register"/>
         <div className="auth__form-containter">
@@ -39,8 +37,6 @@ function Login(props) {
         </div>
       </div>
     </div>
-
-    </>
   );
 }
 

@@ -6,6 +6,11 @@ function AddPostPopup(props) {
 
   const [url, setUrl] = React.useState('');
 
+  React.useEffect(() => {
+    setTitle('');
+    setUrl('');
+}, [props.isOpen]);
+
   function handleTitleChange(e) {
     setTitle(e.target.value);
   }
@@ -20,6 +25,7 @@ function AddPostPopup(props) {
       name: title,
       link: url
     });
+
   }
 
   return (

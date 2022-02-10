@@ -1,7 +1,6 @@
 import React from "react";
 import Header from "./Header";
 import {Link} from "react-router-dom";
-import InfoTooltip from "./InfoTooltip";
 
 function Register(props) {
   const [email, setEmail] = React.useState('');
@@ -24,9 +23,8 @@ function Register(props) {
     });
   }
   return (
-    <>
     <div className="body">
-      <InfoTooltip isOpen={props.isOpen} onClose={props.onClose} isSuccessfull={props.isSuccessfull}></InfoTooltip>
+      {props.children}
       <div className="page">
         <Header buttonTitle="Log in" buttonPath="/signin"/>
         <div className="auth__form-containter">
@@ -40,8 +38,6 @@ function Register(props) {
         </div>
       </div>
     </div>
-
-    </>
   );
 }
 
