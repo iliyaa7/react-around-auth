@@ -19,9 +19,7 @@ import auth from '../utils/auth';
 import { useHistory } from "react-router";
 import InfoTooltip from './InfoTooltip';
 
-// Dear Gennadiy, I've tried your code for closing the popup by escape
-// but the event never clears. Maybe it is because of that component never unmounts?
-// please help me solve that.
+
 
 
 
@@ -255,54 +253,47 @@ function App() {
   return (
     <div className="body">
       <InfoTooltip isOpen={isInfoToolOpen} onClose={closeAllPopups} response={isResponseSuccessfull}></InfoTooltip>
-      <div className="page">
-        <Switch>
-          <Route path="/signin">
+        <CurrentUserContext.Provider value={currentUser}>
+        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}>
+        </EditAvatarPopup>
+        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}>
+        </EditProfilePopup>
+        <AddPostPopup isOpen={isAddPostPopupOpen} onClose={closeAllPopups} onUpdateUser={handleAddPost}>
+        </AddPostPopup>
+        <PopupWithForm id="delete-post" title="Are you sure?" submitBtnTitle="Yes" isOpen={isDeletePostPopupOpen} onClose={closeDeletePopup} onSubmit={handleDeleteCardSubmit} >
+        </PopupWithForm >
+        <ImagePopup isOpen={isImagePopupOpen} selectedCard={selectedCard} onClose={closeAllPopups}/>
+        <div className="page">
+          <Switch>
+            <Route path="/signin">
+              {
+                isLoggedIn ? <Redirect to="/" /> :
+                <Login handleSignin={handleSignin}/>
+              }
+            </Route>
+            <Route path="/register">
             {
               isLoggedIn ? <Redirect to="/" /> :
-              <Login handleSignin={handleSignin}/>
+              <Register handleRegister={handleRegister}/>
             }
-          </Route>
-          <Route path="/register">
-          {
-            isLoggedIn ? <Redirect to="/" /> :
-            <Register handleRegister={handleRegister}/>
-          }
-          </Route>
-          <ProtectedRoute path="/" loggedIn={isLoggedIn}>
-            <CurrentUserContext.Provider value={currentUser}>
-              <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}>
-              </EditAvatarPopup>
-
-              <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}>
-              </EditProfilePopup>
-
-              <AddPostPopup isOpen={isAddPostPopupOpen} onClose={closeAllPopups} onUpdateUser={handleAddPost}>
-              </AddPostPopup>
-
-              <PopupWithForm id="delete-post" title="Are you sure?" submitBtnTitle="Yes" isOpen={isDeletePostPopupOpen} onClose={closeDeletePopup} onSubmit={handleDeleteCardSubmit} >
-              </PopupWithForm >
-
-              <ImagePopup isOpen={isImagePopupOpen} selectedCard={selectedCard} onClose={closeAllPopups}/>
-
-
-
-                <Header userEmail={userEmail} isLoggedIn={isLoggedIn} handleLogOut={handleLogOut}/>
-                <CardsContext.Provider value={cards}>
-                  <Main
-                  handleEditAvatarClick={handleEditAvatarClick}
-                  handleEditProfileClick={handleEditProfileClick}
-                  handleAddCardClick={handleAddCardClick}
-                  handleDeleteBtnClick={handleDeleteBtnClick}
-                  onCardClick={handleCardClick}
-                  handleCardLike={handleCardLike}
-                  />
-                </CardsContext.Provider>
-                <Footer/>
-            </CurrentUserContext.Provider>
-          </ProtectedRoute>
-        </Switch>
-      </div>
+            </Route>
+            <ProtectedRoute path="/" loggedIn={isLoggedIn}>
+              <Header userEmail={userEmail} isLoggedIn={isLoggedIn} handleLogOut={handleLogOut}/>
+              <CardsContext.Provider value={cards}>
+                <Main
+                handleEditAvatarClick={handleEditAvatarClick}
+                handleEditProfileClick={handleEditProfileClick}
+                handleAddCardClick={handleAddCardClick}
+                handleDeleteBtnClick={handleDeleteBtnClick}
+                onCardClick={handleCardClick}
+                handleCardLike={handleCardLike}
+                />
+              </CardsContext.Provider>
+              <Footer/>
+            </ProtectedRoute>
+          </Switch>
+        </div>
+      </CurrentUserContext.Provider>
     </div>
   );
 }
