@@ -23,11 +23,7 @@ import InfoTooltip from './InfoTooltip';
 // but the event never clears. Maybe it is because of that component never unmounts?
 // please help me solve that.
 
-//I've also used your solution for clearing the form inputs, but in my case i had to use props.isOpen
-// if I remeber right (from the air bnb eslint rules) you cant put only one prop as a depandancy,
-// so please tell my solution is fine.
 
-//And how do i prevent the popup from closing when clicking down on
 
 
 function App() {
@@ -60,6 +56,9 @@ function App() {
 
   const history = useHistory();
 
+  const isOpen = isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPostPopupOpen
+  || isDeletePostPopupOpen || isImagePopupOpen ||isInfoToolOpen;
+
   React.useEffect(() => {
     api.getCards().then((res) => {
       setCards(res);
@@ -88,6 +87,32 @@ function App() {
     });
   }, [])
 
+  React.useEffect(() => {
+    const closeByEscape = (e) => {
+      if (e.key === 'Escape') {
+        closeAllPopups();
+      }
+    }
+    if (isOpen) {
+      document.addEventListener('keydown', closeByEscape)
+    }
+
+    return () => document.removeEventListener('keydown', closeByEscape)
+  }, [isOpen])
+
+  React.useEffect(() => {
+    const closeByOverlayClick = (e) => {
+      if (e.target.classList.contains('popup_opened')) {
+        closeAllPopups();
+      }
+    }
+    if (isOpen) {
+      document.addEventListener('click', closeByOverlayClick)
+    }
+
+    return () => document.removeEventListener('click', closeByOverlayClick)
+  }, [isOpen])
+
 
 
   function handleRegister(data) {
@@ -107,7 +132,13 @@ function App() {
   function handleSignin(data) {
     auth.signin(data).then((res) => {
       localStorage.setItem('token', res.token);
-      setUserEmail(data.email);
+    })
+    .then(() => {
+      return auth.getUserInfo(localStorage.getItem('token'))
+    })
+    .then((res) => {
+      console.log(res)
+      setUserEmail(res.email);
       setIsLoggedIn(true);
     })
     .catch((err) => {
@@ -121,6 +152,8 @@ function App() {
       setIsInfoToolOpen(true);
     });
   }
+
+
 
 
   function handleEditAvatarClick() {
@@ -217,86 +250,60 @@ function App() {
     setIsLoggedIn(false);
   }
 
-  React.useEffect(() => {
-    const closeByEscape = (e) => {
-      console.log(e.key)
-      if (e.key === 'Escape') {
-        closeAllPopups();
-      }
-    }
 
-    document.addEventListener('keydown', closeByEscape)
-
-    return () => document.removeEventListener('keydown', closeByEscape)
-}, [])
-
-React.useEffect(() => {
-  const closeByOverlayClick = (e) => {
-    console.log(e.target.className)
-    if (e.target.className === 'popup popup_opened') {
-      closeAllPopups();
-    }
-  }
-
-  document.addEventListener('click', closeByOverlayClick)
-
-  return () => document.removeEventListener('click', closeByOverlayClick)
-}, [])
 
   return (
-    <Switch>
-      <Route path="/signin">
-        {
-          isLoggedIn ? <Redirect to="/" /> :
-          <Login handleSignin={handleSignin}>
-            <InfoTooltip isOpen={isInfoToolOpen} onClose={closeAllPopups} response={isResponseSuccessfull}></InfoTooltip>
-          </Login>
-        }
-      </Route>
-      <Route path="/register">
-      {
-        isLoggedIn ? <Redirect to="/" /> :
-        <Register handleRegister={handleRegister}>
-          <InfoTooltip isOpen={isInfoToolOpen} onClose={closeAllPopups} response={isResponseSuccessfull}></InfoTooltip>
-        </Register>
-      }
-      </Route>
-      <ProtectedRoute path="/" loggedIn={isLoggedIn}>
-        <div className="body">
-          <CurrentUserContext.Provider value={currentUser}>
-            <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}>
-            </EditAvatarPopup>
+    <div className="body">
+      <InfoTooltip isOpen={isInfoToolOpen} onClose={closeAllPopups} response={isResponseSuccessfull}></InfoTooltip>
+      <div className="page">
+        <Switch>
+          <Route path="/signin">
+            {
+              isLoggedIn ? <Redirect to="/" /> :
+              <Login handleSignin={handleSignin}/>
+            }
+          </Route>
+          <Route path="/register">
+          {
+            isLoggedIn ? <Redirect to="/" /> :
+            <Register handleRegister={handleRegister}/>
+          }
+          </Route>
+          <ProtectedRoute path="/" loggedIn={isLoggedIn}>
+            <CurrentUserContext.Provider value={currentUser}>
+              <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}>
+              </EditAvatarPopup>
 
-            <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}>
-            </EditProfilePopup>
+              <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}>
+              </EditProfilePopup>
 
-            <AddPostPopup isOpen={isAddPostPopupOpen} onClose={closeAllPopups} onUpdateUser={handleAddPost}>
-            </AddPostPopup>
+              <AddPostPopup isOpen={isAddPostPopupOpen} onClose={closeAllPopups} onUpdateUser={handleAddPost}>
+              </AddPostPopup>
 
-            <PopupWithForm id="delete-post" title="Are you sure?" submitBtnTitle="Yes" isOpen={isDeletePostPopupOpen} onClose={closeDeletePopup} onSubmit={handleDeleteCardSubmit} >
-            </PopupWithForm >
+              <PopupWithForm id="delete-post" title="Are you sure?" submitBtnTitle="Yes" isOpen={isDeletePostPopupOpen} onClose={closeDeletePopup} onSubmit={handleDeleteCardSubmit} >
+              </PopupWithForm >
 
-            <ImagePopup isOpen={isImagePopupOpen} selectedCard={selectedCard} onClose={closeAllPopups}/>
+              <ImagePopup isOpen={isImagePopupOpen} selectedCard={selectedCard} onClose={closeAllPopups}/>
 
-            <div className="page">
 
-              <Header userEmail={userEmail} isLoggedIn={isLoggedIn} handleLogOut={handleLogOut}/>
-              <CardsContext.Provider value={cards}>
-                <Main
-                handleEditAvatarClick={handleEditAvatarClick}
-                handleEditProfileClick={handleEditProfileClick}
-                handleAddCardClick={handleAddCardClick}
-                handleDeleteBtnClick={handleDeleteBtnClick}
-                onCardClick={handleCardClick}
-                handleCardLike={handleCardLike}
-                />
-              </CardsContext.Provider>
-              <Footer/>
-            </div>
-          </CurrentUserContext.Provider>
-        </div>
-      </ProtectedRoute>
-    </Switch>
+
+                <Header userEmail={userEmail} isLoggedIn={isLoggedIn} handleLogOut={handleLogOut}/>
+                <CardsContext.Provider value={cards}>
+                  <Main
+                  handleEditAvatarClick={handleEditAvatarClick}
+                  handleEditProfileClick={handleEditProfileClick}
+                  handleAddCardClick={handleAddCardClick}
+                  handleDeleteBtnClick={handleDeleteBtnClick}
+                  onCardClick={handleCardClick}
+                  handleCardLike={handleCardLike}
+                  />
+                </CardsContext.Provider>
+                <Footer/>
+            </CurrentUserContext.Provider>
+          </ProtectedRoute>
+        </Switch>
+      </div>
+    </div>
   );
 }
 
