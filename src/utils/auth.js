@@ -38,7 +38,7 @@ class Auth {
 
 }
 const auth = new Auth({
-  baseUrl: "https://register.nomoreparties.co"
+  baseUrl: "http://localhost:3000"
 });
 
 export default auth

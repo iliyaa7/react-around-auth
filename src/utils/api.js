@@ -6,73 +6,92 @@ const fetchFunction = (url, headers) => {
 
 
 class Api {
-  constructor({ baseUrl, headers }) {
+  constructor({ baseUrl }) {
     this._baseUrl = baseUrl;
-    this._headers = headers;
   }
 
-  getUserInfo() {
+  getUserInfo(token) {
     return fetchFunction(`${this._baseUrl}/users/me`, {
-      headers: this._headers
+      headers: {
+      authorization: `Bearer ${ token }`,
+      "Content-Type": "application/json",
+    },
     });
   }
 
-  getCards() {
+  getCards(token) {
     return fetchFunction(`${this._baseUrl}/cards`, {
-      headers: this._headers
+      headers: {
+      authorization: `Bearer ${ token }`,
+      "Content-Type": "application/json",
+    },
     });
   }
 
-  editUserInfo(data) {
+  editUserInfo(data, token) {
     return fetchFunction(`${this._baseUrl}/users/me`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: {
+      authorization: `Bearer ${ token }`,
+      "Content-Type": "application/json",
+    },
       body: JSON.stringify(data)
     });
   }
 
-  addPostCard(data) {
+  addPostCard(data, token) {
     return fetchFunction(`${this._baseUrl}/cards`, {
       method: "POST",
-      headers: this._headers,
+      headers: {
+      authorization: `Bearer ${ token }`,
+      "Content-Type": "application/json",
+    },
       body: JSON.stringify(data)
     });
   }
 
-  changeLikeCardStatus(cardId, isLiked) {
+  changeLikeCardStatus(cardId, isLiked, token) {
     if (isLiked) {
-      return fetchFunction(`${this._baseUrl}/cards/likes/${cardId}`, {
+      return fetchFunction(`${this._baseUrl}/cards/${cardId}/likes`, {
         method: "DELETE",
-        headers: this._headers,
+        headers: {
+      authorization: `Bearer ${ token }`,
+      "Content-Type": "application/json",
+    },
       });
     }
-    return fetchFunction(`${this._baseUrl}/cards/likes/${cardId}`, {
+    return fetchFunction(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "PUT",
-      headers: this._headers,
+      headers: {
+      authorization: `Bearer ${ token }`,
+      "Content-Type": "application/json",
+    },
     });
   }
 
-  deleteCard(cardId) {
+  deleteCard(cardId, token) {
     return fetchFunction(`${this._baseUrl}/cards/${cardId}`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: {
+      authorization: `Bearer ${ token }`,
+      "Content-Type": "application/json",
+    },
     });
   }
 
-  editAvatar(data) {
+  editAvatar(data, token) {
     return fetchFunction(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: {
+      authorization: `Bearer ${ token }`,
+      "Content-Type": "application/json",
+    },
       body: JSON.stringify(data)
     });
   }
 }
 const api = new Api({
-  baseUrl: "https://around.nomoreparties.co/v1/group-12",
-  headers: {
-    authorization: "fd1068ae-504b-49a0-9d62-632d18414be1",
-    "Content-Type": "application/json",
-  },
+  baseUrl: "http://localhost:3000",
 });
 
 export default api

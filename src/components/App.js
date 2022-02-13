@@ -58,7 +58,7 @@ function App() {
   || isDeletePostPopupOpen || isImagePopupOpen ||isInfoToolOpen;
 
   React.useEffect(() => {
-    api.getCards().then((res) => {
+    api.getCards(localStorage.getItem('token')).then((res) => {
       setCards(res);
     })
     .catch((err) => {
@@ -67,17 +67,9 @@ function App() {
   }, [])
 
   React.useEffect(() => {
-    api.getUserInfo().then((res) => {
-      setCurrentUser(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }, [])
-
-  React.useEffect(() => {
     auth.getUserInfo(localStorage.getItem('token')).then((res) => {
-      setUserEmail(res.data.email);
+      setCurrentUser(res);
+      setUserEmail(res.email);
       setIsLoggedIn(true);
     })
     .catch((err) => {
@@ -135,7 +127,7 @@ function App() {
       return auth.getUserInfo(localStorage.getItem('token'))
     })
     .then((res) => {
-      console.log(res)
+      setCurrentUser(res)
       setUserEmail(res.email);
       setIsLoggedIn(true);
     })
@@ -191,7 +183,7 @@ function App() {
 
   function handleDeleteCardSubmit(evt) {
     evt.preventDefault();
-    api.deleteCard(cardToDelete).then(() => {
+    api.deleteCard(cardToDelete, localStorage.getItem('token')).then(() => {
       const newCards = cards.filter((card) => card._id !== cardToDelete);
       setCards(newCards);
       setIsDeletePostPopupOpen(false);
@@ -203,7 +195,7 @@ function App() {
   }
 
   function handleUpdateUser(data) {
-    api.editUserInfo(data).then((res) =>{
+    api.editUserInfo(data, localStorage.getItem('token')).then((res) =>{
       setCurrentUser(res);
       setIsEditProfilePopupOpen(false);
     })
@@ -213,7 +205,7 @@ function App() {
   }
 
   function handleUpdateAvatar(data) {
-    api.editAvatar(data).then((res) =>{
+    api.editAvatar(data, localStorage.getItem('token')).then((res) =>{
       setCurrentUser(res);
       setIsEditAvatarPopupOpen(false);
     })
@@ -223,7 +215,7 @@ function App() {
   }
 
   function handleAddPost(data) {
-    api.addPostCard(data).then((newCard) =>{
+    api.addPostCard(data, localStorage.getItem('token')).then((newCard) =>{
       setCards([newCard, ...cards]);
       setIsAddPostPopupOpen(false);
     })
@@ -233,9 +225,9 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(i => i === currentUser._id);
 
-    api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
+    api.changeLikeCardStatus(card._id, isLiked, localStorage.getItem('token')).then((newCard) => {
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
     })
     .catch((err) => {
