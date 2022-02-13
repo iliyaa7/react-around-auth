@@ -111,7 +111,7 @@ function App() {
       history.push({pathname:  "/signin",})
     })
     .catch((err) => {
-      console.log(`error ${err} - one of the fields was filled in incorrectly`);
+      console.log(err);
       setIsResponseSuccessfull(false);
     })
     .finally(() => {
@@ -134,9 +134,9 @@ function App() {
     .catch((err) => {
       console.log(err);
       if (err === 400) {
-        console.log(`error ${err} - one of the fields was filled in incorrectly`);
+        console.log(err);
       } else if (err === 401) {
-        console.log(`error ${err} - the user with the specified email not found`);
+        console.log(err);
       }
       setIsResponseSuccessfull(false);
       setIsInfoToolOpen(true);

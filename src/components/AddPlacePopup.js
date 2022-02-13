@@ -30,7 +30,7 @@ function AddPostPopup(props) {
 
   return (
     <PopupWithForm id="add-post" title="New place" submitBtnTitle="Create" onSubmit={handleSubmit} isOpen={props.isOpen} onClose={props.onClose} >
-      <input onChange={handleTitleChange} type="text" name="name" className="popup__form-input" placeholder="Title" id="title" value={title || ""} minLength="1" maxLength="30" required/>
+      <input onChange={handleTitleChange} type="text" name="name" className="popup__form-input" placeholder="Title" id="title" value={title || ""} minLength="2" maxLength="30" required/>
       <span className="popup__form-input-error" id="title-error"></span>
       <input onChange={handleLinkChange} type="url" name="link" className="popup__form-input" placeholder="Image link" id="link" value={url || ""} required/>
       <span className="popup__form-input-error" id="link-error"></span>
