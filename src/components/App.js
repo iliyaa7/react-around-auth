@@ -124,12 +124,16 @@ function App() {
       localStorage.setItem('token', res.token);
     })
     .then(() => {
-      return auth.getUserInfo(localStorage.getItem('token'))
+      auth.getUserInfo(localStorage.getItem('token')).then((res) => {
+        setCurrentUser(res)
+        setUserEmail(res.email);
+        setIsLoggedIn(true);
+      })
     })
-    .then((res) => {
-      setCurrentUser(res)
-      setUserEmail(res.email);
-      setIsLoggedIn(true);
+    .then(() => {
+      api.getCards(localStorage.getItem('token')).then((res) => {
+        setCards(res);
+      })
     })
     .catch((err) => {
       console.log(err);
