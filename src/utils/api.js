@@ -91,7 +91,7 @@ class Api {
   }
 }
 const api = new Api({
-  baseUrl: "http://localhost:3000",
+  baseUrl: "https://api.iliyaa7.students.nomoreparties.sbs",
 });
 
 export default api
