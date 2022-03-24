@@ -1,8 +1,4 @@
-Around the U.S. project on React, featuring authorization and registration.
+This is the repository that contains the code of "Around the U.S." front-end application written in React.
 
-This repository will contain your own front-end project on React with added authorization and registration features.
-Start working with your previously built front end code from Sprint 11.
-
-All authorization, registration and token requests must go through to the server running on [https://register.nomoreparties.co](https://register.nomoreparties.co/).
-
-Good luck!
+A link to the website that hosts the deployed project - https://www.iliyaa7.students.nomoreparties.sbs
+A link to the complete "Around the U.S." project that uses this project's build - https://github.com/iliyaa7/react-around-api-full
